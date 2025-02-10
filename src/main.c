@@ -34,11 +34,21 @@ int getParity(char *code, int step)
     return p;
 }
 
+
+int getArrayLength(char *array) {
+    int i = 0;
+    while (array[i] != '\0')
+    {
+        i++;
+    }
+    return i;
+}
+
 int checkBits(char *bits)
 {
 
     int i = 0;
-    int l = sizeof(bits);
+    int l = getArrayLength(bits);
     while (i < l && bits[i] != '\0')
     {
         if (bits[i] != '0' && bits[i] != '1')
@@ -49,6 +59,15 @@ int checkBits(char *bits)
     }
 
     return 0;
+}
+
+void calcolaCodeWord(char *hamming, int *parityArray){
+    int parityArraySize = sizeof(parityArray);
+    for (int h = 0, j = 0, step = 0, pzero = '0' ;h<parityArraySize;h++) {
+        j = parityArray[h];
+        step = (int)pow(2, h);
+        hamming[j] = getParity(hamming, step) + pzero;
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -64,7 +83,6 @@ int main(int argc, char const *argv[])
 
     // Output the text
     char *input;
-
     printf("Ciao %s, inserisci una sequenza di 4 bit:", firstName);
     scanf("%4s", input);
 
@@ -76,36 +94,40 @@ int main(int argc, char const *argv[])
 
     printf("\nOttimo! Hai inserito la sequenza %s; ora ti calcolo i bit di parita'\n", input);
 
-    char hamming[8];
-    int j = 0, k = 0, zero = '0';
-    hamming[j++] = '_';
-    hamming[j++] = '_';
-    hamming[j++] = input[k++];
-    hamming[j++] = '_';
-    hamming[j++] = input[k++];
-    hamming[j++] = input[k++];
-    hamming[j++] = input[k++];
+    int sizeOfInput = getArrayLength(input);
+    int parityArraySize = ((int)log2(sizeOfInput)) + 1;
+
+    int parityArray[parityArraySize];
+    for (int i = 0; i < parityArraySize; i++)
+    {
+        parityArray[i] = (int)pow(2, i) -1;
+        printf("parityArray[%d]: %d\n", i, parityArray[i]);
+    }
+
+    int workLoadSize = parityArraySize + sizeOfInput;
+    printf("workLoadSize Array Size: %d\n", workLoadSize);
+
+    char hamming[workLoadSize];
+    int j = 0;
+    int step;
+    for (int k = 0, l = 0; 
+            j<workLoadSize ; 
+            j++)
+    {
+        if( l<parityArraySize && j == parityArray[l]){
+            l++;
+            hamming[j] = '_';
+        } else if( k<sizeOfInput) {
+            hamming[j] = input[k++];
+        }
+        printf("hamming[%d]: %c\n", j, hamming[j]);
+
+    }
     hamming[j] = '\0';
 
-    int i = 0, step;
-    int parity0, parity1, parity2; //, parity3 = '_';
     printf("I bit di parità sono i seguenti:\n");
+    calcolaCodeWord(hamming, parityArray);
 
-    j = pow(2, i);
-    step = (int)pow(2, i++);
-    hamming[j - 1] = getParity(hamming, step) + zero;
-    //printf("Codework aggiornata: %s\n", hamming);
-
-    j = pow(2, i);
-    step = (int)pow(2, i++);
-    hamming[j - 1] = getParity(hamming, step) + zero;
-    //printf("Codework aggiornata: %s\n", hamming);
-
-    j = pow(2, i);
-    step = (int)pow(2, i++);
-    hamming[j - 1] = getParity(hamming, step) + zero;
-    //printf("Codework aggiornata: %s\n", hamming);
-    
     printf("\nLa codeword finale è: %s\n", hamming);
 
     return 0;
