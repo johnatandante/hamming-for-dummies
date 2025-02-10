@@ -1,13 +1,22 @@
 #include <stdio.h>
 #include <math.h>
 
+int getArrayLength(char *array) {
+    int i = 0;
+    while (array[i] != '\0')
+    {
+        i++;
+    }
+    return i;
+}
+
 int getParity(char *code, int step)
 {
     int zero = '0', bit;
     int p = 0;
-    int l = sizeof(code);
+    int l = getArrayLength(code);
     int flag = 0;
-    char parity[100];
+    char parity[l];
     int iParity = 0;
     parity[iParity++] = '_';
     printf("Posizioni protette: ");
@@ -32,16 +41,6 @@ int getParity(char *code, int step)
     parity[iParity] = '\0';
     printf(" Parity: %s\n", parity);
     return p;
-}
-
-
-int getArrayLength(char *array) {
-    int i = 0;
-    while (array[i] != '\0')
-    {
-        i++;
-    }
-    return i;
 }
 
 int checkBits(char *bits)
@@ -69,6 +68,16 @@ void calcolaCodeWord(char *hamming, int *parityArray, int parityArraySize){
     }
 }
 
+int getNumeroBitDiControllo(int num_bit_dati) {
+    int num_bit_controllo = 0;
+    while (pow(2, num_bit_controllo) <= num_bit_dati + num_bit_controllo)
+    {
+        num_bit_controllo++;
+    }
+    
+    return num_bit_controllo;
+}
+
 int main(int argc, char const *argv[])
 {
     // Create a string
@@ -76,14 +85,12 @@ int main(int argc, char const *argv[])
 
     // Ask the user to input some text
     printf("Enter your first name: \n");
-
-    // Get and save the text
     scanf("%s", firstName);
 
-    // Output the text
+    // Ask for some bytes
     char *input;
-    printf("Ciao %s, inserisci una sequenza di 4 bit:", firstName);
-    scanf("%4s", input);
+    printf("Ciao %s, inserisci una sequenza di bit:", firstName);
+    scanf("%s", input);
 
     if (checkBits(input) != 0)
     {
@@ -93,9 +100,14 @@ int main(int argc, char const *argv[])
 
     printf("\nOttimo! Hai inserito la sequenza %s; ora ti calcolo i bit di parita'\n", input);
 
+    // get data bit size
     int sizeOfInput = getArrayLength(input);
-    int parityArraySize = ((int)log2(sizeOfInput)) + 1;
-    
+    printf("Size of input data: %d \n", sizeOfInput);
+
+    // num_bit_dati + num_bit_controllo + 1 = 2^bit_controllo
+    int parityArraySize = getNumeroBitDiControllo(sizeOfInput);
+    printf("Parity Array Size: %d\n", parityArraySize);
+
     int parityArray[parityArraySize];
     int i;
     for (i = 0; i < parityArraySize; i++)
