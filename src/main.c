@@ -61,8 +61,7 @@ int checkBits(char *bits)
     return 0;
 }
 
-void calcolaCodeWord(char *hamming, int *parityArray){
-    int parityArraySize = sizeof(parityArray);
+void calcolaCodeWord(char *hamming, int *parityArray, int parityArraySize){
     for (int h = 0, j = 0, step = 0, pzero = '0' ;h<parityArraySize;h++) {
         j = parityArray[h];
         step = (int)pow(2, h);
@@ -96,17 +95,20 @@ int main(int argc, char const *argv[])
 
     int sizeOfInput = getArrayLength(input);
     int parityArraySize = ((int)log2(sizeOfInput)) + 1;
-
+    
     int parityArray[parityArraySize];
-    for (int i = 0; i < parityArraySize; i++)
+    int i;
+    for (i = 0; i < parityArraySize; i++)
     {
         parityArray[i] = (int)pow(2, i) -1;
         printf("parityArray[%d]: %d\n", i, parityArray[i]);
     }
 
     int workLoadSize = parityArraySize + sizeOfInput;
+
     printf("workLoadSize Array Size: %d\n", workLoadSize);
 
+    // char hamming[8];
     char hamming[workLoadSize];
     int j = 0;
     int step;
@@ -126,7 +128,7 @@ int main(int argc, char const *argv[])
     hamming[j] = '\0';
 
     printf("I bit di parità sono i seguenti:\n");
-    calcolaCodeWord(hamming, parityArray);
+    calcolaCodeWord(hamming, parityArray, parityArraySize);
 
     printf("\nLa codeword finale è: %s\n", hamming);
 
