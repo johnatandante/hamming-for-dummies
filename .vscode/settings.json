@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/dantedelfavero/repo/classiterze/haming-c/output",
+            "binaryPath": "/Users/dantedelfavero/repo/classiterze/haming-c/output/main",
+            "binaryArgs": []
+        }
+    ]
+}
