@@ -1,9 +1,9 @@
 #include "./tools.h"
 
-int getParity(char *code, int step);
+int compute_parity_bit(char *code, int step);
 
-void calcolaCodeWord(char *hamming, int *parityArray, int parityArraySize);
+void calcola_code_word(char *hamming, int  workLoadSize, char* input, int *parityArray, int parityArraySize);
 
-int getNumeroBitDiControllo(int num_bit_dati);
+int get_numero_bit_di_controllo(int num_bit_dati);
 
-void *populateParityArray(int *parity_array, int parity_array_size);
+void *populate_parity_array(int *parity_array, int parity_array_size);

@@ -6,7 +6,7 @@
 
 const char null_char = '\0';
 
-int getParity(char *code, int step)
+int compute_parity_bit(char *code, int step)
 {
     int zero = zero_char, bit;
     int p = 0;
@@ -39,16 +39,33 @@ int getParity(char *code, int step)
     return p;
 }
 
-void calcolaCodeWord(char *hamming, int *parityArray, int parityArraySize){
+void calcola_code_word(char* hamming, int work_load_size, char *input, int *parity_array, int parity_array_size){
+
+    int num_bit_dati = work_load_size - parity_array_size;
+    int j = 0;
+    for (int k = 0, l = 0; 
+            j<work_load_size; 
+            j++)
+    {
+        if( l<parity_array_size && j == parity_array[l]){
+            l++;
+            hamming[j] = '_';
+        } else if( k<num_bit_dati) {
+            hamming[j] = input[k++];
+        }
+        printf("hamming[%d]: %c\n", j, hamming[j]);
+    }
+    hamming[j] = null_char;
+
     int pzero = zero_char;
-    for (int h = 0, j = 0, step = 0 ;h<parityArraySize;h++) {
-        j = parityArray[h];
+    for (int h = 0, j = 0, step = 0 ;h<parity_array_size;h++) {
+        j = parity_array[h];
         step = (int)pow(2, h);
-        hamming[j] = getParity(hamming, step) + pzero;
+        hamming[j] = compute_parity_bit(hamming, step) + pzero;
     }
 }
 
-int getNumeroBitDiControllo(int num_bit_dati) {
+int get_numero_bit_di_controllo(int num_bit_dati) {
     int num_bit_controllo = 0;
     while (pow(2, num_bit_controllo) <= num_bit_dati + num_bit_controllo)
     {
@@ -58,7 +75,7 @@ int getNumeroBitDiControllo(int num_bit_dati) {
     return num_bit_controllo;
 }
 
-void *populateParityArray(int *parity_array, int parity_array_size) {
+void *populate_parity_array(int *parity_array, int parity_array_size) {
     for (int i = 0; i < parity_array_size; i++)
     {
         parity_array[i] = (int)pow(2, i) -1;
